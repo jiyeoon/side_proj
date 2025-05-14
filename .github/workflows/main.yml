@@ -23,11 +23,20 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y unzip xvfb libxi6 libgconf-2-4 libnss3 libxss1 libappindicator1 libindicator7
-        sudo apt-get install -y chromium-browser
+        sudo apt-get install -y wget unzip
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt install -y ./google-chrome-stable_current_amd64.deb
+        CHROME_VERSION=$(google-chrome --version | grep -oP "\d+\.\d+\.\d+")
+        wget -O chromedriver.zip https://chromedriver.storage.googleapis.com/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION%.*})/chromedriver_linux64.zip
+        unzip chromedriver.zip
+        sudo mv chromedriver /usr/local/bin/
+        sudo chmod +x /usr/local/bin/chromedriver
+
+    - name: Install Python dependencies
+      run: |
         pip install -r requirements.txt
 
-    - name: Run login script
+    - name: Run Python script
       env:
         LOGIN_ID: ${{ secrets.MY_ID }}
         LOGIN_PASSWORD: ${{ secrets.MY_PASSWORD }}
