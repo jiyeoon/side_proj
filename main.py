@@ -16,7 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 # 0. 변수 선언 
-KST = timezone('Asia/Seoul')
+KST = timezone(timedelta(hours=9))
 TARGET_TIME = datetime.now(KST).replace(hour=9, minute=0, second=0, microsecond=0)
 
 login_id = os.environ.get("LOGIN_ID")
