@@ -4,7 +4,6 @@ import datetime
 import time
 import sys
 import requests
-import easyocr
 
 from datetime import datetime, timezone, timedelta
 
