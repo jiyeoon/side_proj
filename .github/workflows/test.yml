@@ -18,10 +18,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt || true  # 없으면 무시
+          pip install requests
 
       - name: Run test.py
         env:
           KAKAO_ACCESS_TOKEN: ${{ secrets.MY_KAKAO_ACCESS_TOKEN }}
           BASE_URL: ${{ secrets.MY_BASE_URL }}
+          SLACK_URL: ${{ secrets.MY_SLACK_URL }}
         run: python test.py
