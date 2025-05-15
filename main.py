@@ -79,7 +79,7 @@ def main():
     while datetime.now(KST).strftime('%H:%M:%S') < target_time:
         time.sleep(0.01)
         count += 1
-        if count % 100 == 0:
+        if count % 3000 == 0:
             print(f"대기중... 현재 시간: {datetime.now().strftime('%H:%M:%S')}")
         if count > 100000:
             print("대기 시간이 너무 길어 종료합니다.")
@@ -141,7 +141,7 @@ def main():
     court_list = driver.find_elements(By.CSS_SELECTOR, 'ul.court_list li')
     driver.execute_script("arguments[0].scrollIntoView(true);", court_list[0])
 
-    available_courts = [5, 6, 2, 13, 18, 19, 17, 16, 15, 14, 12, 11, 10, 9, 8, 4, 3, 7]
+    available_courts = [19, 18, 2, 13, 17, 16, 15, 14, 12, 11, 10, 9, 8, 4, 3, 7, 5, 6]
 
     for court_num in available_courts:
         try:
