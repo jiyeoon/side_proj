@@ -28,7 +28,7 @@ kakao_access_token = os.environ.get("KAKAO_ACCESS_TOKEN")
 
 # 0. 함수 정의
 def msgInfo(msg):
-    pStr = "\t[INFO]>> [{}] : {}\n".format(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), msg)
+    pStr = "\t[INFO]>> [{}] : {}\n".format(datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S'), msg)
     sys.stdout.write(pStr)
 
 def send_slack_message(status, msg):
