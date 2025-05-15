@@ -1,0 +1,27 @@
+name: Run test.py
+
+on:
+  workflow_dispatch:  # 수동 실행
+
+jobs:
+  run-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt || true  # 없으면 무시
+
+      - name: Run test.py
+        env:
+          KAKAO_ACCESS_TOKEN: ${{ secrets.MY_KAKAO_ACCESS_TOKEN }}
+          BASE_URL: ${{ secrets.MY_BASE_URL }}
+        run: python test.py
