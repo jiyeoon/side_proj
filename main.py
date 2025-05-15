@@ -29,7 +29,7 @@ def send_slack_message(status, message):
     if status == 0:
         data['attachments'] = [
             {
-                "title" : f"예약 성공!",
+                "title" : f"Reservation Success!",
                 "title_link" : base_url,
                 "text" : message,
                 "color" : "#2EB67D"
@@ -38,7 +38,7 @@ def send_slack_message(status, message):
     else:
         data['attachments'] = [
             {
-                "title" : f"예약 실패",
+                "title" : f"Reservation Failed!",
                 "title_link" : base_url,
                 "text" : message,
                 "color" : "E01E5A"
@@ -53,6 +53,7 @@ def send_slack_message(status, message):
 
 def main():
     # 1. Selenium으로 로그인
+    print("Chrome Driver 설정")
     options = Options()
     options.add_argument("--headless")  # 중요: GUI 없이 실행
     options.add_argument("--no-sandbox")
@@ -60,12 +61,14 @@ def main():
     driver = webdriver.Chrome(options=options)
 
     # 2. 로그인
+    print("로그인 페이지로 이동")
     driver.get(login_url)
     driver.find_element(By.NAME, 'login_id').send_keys(login_id)
     driver.find_element(By.NAME, 'login_pwd').send_keys(login_pw)
     driver.find_element(By.XPATH, '//*[@id="content"]/div/div/div/button').click()
 
     # 3. 예약하기 버튼 클릭
+    print("메인 홈페이지에서 예약하기 버튼 클릭")
     element = driver.find_element(By.XPATH, '//*[@id="container"]/div[2]/div/div/div/div/div[1]/a')
     driver.execute_script("arguments[0].click();", element)
 
@@ -88,7 +91,7 @@ def main():
     print("페이지 새로고침 완료")
 
     # 3.3 예약 가능한 날짜가 나타날 때까지 대기하기
-    WebDriverWait(driver, 180).until(
+    WebDriverWait(driver, 300).until(
         EC.presence_of_all_elements_located(
             (By.XPATH, "//tbody//a[starts-with(@href, 'javascript:fn_tennis_time_list')]")
         )
