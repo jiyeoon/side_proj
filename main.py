@@ -17,7 +17,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # 0. 변수 선언 
 KST = timezone(timedelta(hours=9))
-TARGET_TIME = datetime.now(KST).replace(hour=9, minute=0, second=0, microsecond=0)
+TARGET_TIME = datetime.now(KST).replace(hour=9, minute=0, second=0, microsecond=5)
 
 login_id = os.environ.get("LOGIN_ID")
 login_pw = os.environ.get("LOGIN_PASSWORD")
@@ -110,6 +110,11 @@ def main():
 
     # 3. 예약하기 버튼 클릭
     msgInfo("메인 홈페이지에서 예약하기 버튼 클릭")
+    WebDriverWait(driver, 60).until(
+        EC.presence_of_element_located(
+            (By.XPATH, '//*[@id="container"]/div[2]/div/div/div/div/div[1]/a')
+        )
+    )
     element = driver.find_element(By.XPATH, '//*[@id="container"]/div[2]/div/div/div/div/div[1]/a')
     driver.execute_script("arguments[0].click();", element)
 
