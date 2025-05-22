@@ -110,12 +110,11 @@ def main():
 
     # 3. 예약하기 버튼 클릭
     msgInfo("메인 홈페이지에서 예약하기 버튼 클릭")
-    WebDriverWait(driver, 60).until(
-        EC.presence_of_element_located(
+    element = WebDriverWait(driver, 300).until(
+        EC.element_to_be_clickable(
             (By.XPATH, '//*[@id="container"]/div[2]/div/div/div/div/div[1]/a')
         )
     )
-    element = driver.find_element(By.XPATH, '//*[@id="container"]/div[2]/div/div/div/div/div[1]/a')
     driver.execute_script("arguments[0].click();", element)
 
     # 4. 9시 정각에 예약하기
