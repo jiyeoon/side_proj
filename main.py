@@ -39,7 +39,7 @@ def send_slack_message(status, msg):
         "attachments": [
             {
                 "title": title,
-                "title_link": base_url,
+                "title_link": "https://github.com/jiyeoon/side_proj/actions",
                 "text": msg,
                 "color": color
             }
@@ -93,6 +93,7 @@ def main():
     options.add_argument("--headless")  # 중요: GUI 없이 실행
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--window-size=1920,1080")  # 반드시 추가!
     driver = webdriver.Chrome(options=options)
 
     # 2. 로그인
@@ -109,13 +110,17 @@ def main():
         pass
 
     # 3. 예약하기 버튼 클릭
-    msgInfo("메인 홈페이지에서 예약하기 버튼 클릭")
-    element = WebDriverWait(driver, 300).until(
-        EC.element_to_be_clickable(
-            (By.XPATH, '//*[@id="container"]/div[2]/div/div/div/div/div[1]/a')
-        )
+    msgInfo("메인 홈페이지 로딩 대기 & 예약하기 버튼 클릭")
+    # 페이지 로딩 완료 대기
+    WebDriverWait(driver, 20).until(
+        lambda d: d.execute_script("return document.readyState") == "complete"
     )
-    driver.execute_script("arguments[0].click();", element)
+    # 버튼 대기 및 클릭
+    link = WebDriverWait(driver, 15).until(
+        EC.element_to_be_clickable((By.LINK_TEXT, "일일입장 예약신청"))
+    )
+    driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", link)
+    driver.execute_script("arguments[0].click();", link)
 
     # 4. 9시 정각에 예약하기
     # 4.1 9시까지 대기하기
