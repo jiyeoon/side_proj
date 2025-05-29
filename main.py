@@ -17,7 +17,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # 0. 변수 선언 
 KST = timezone(timedelta(hours=9))
-TARGET_TIME = datetime.now(KST).replace(hour=9, minute=0, second=0, microsecond=5)
+TARGET_TIME = datetime.now(KST).replace(hour=9, minute=0, second=0, microsecond=4)
 
 login_id = os.environ.get("LOGIN_ID")
 login_pw = os.environ.get("LOGIN_PASSWORD")
@@ -26,21 +26,30 @@ base_url = os.environ.get("BASE_URL")
 slack_url = os.environ.get("SLACK_URL")
 kakao_access_token = os.environ.get("KAKAO_ACCESS_TOKEN")
 
+buffer = ""  # 로그 버퍼
+
 # 0. 함수 정의
 def msgInfo(msg):
     pStr = "\t[INFO]>> [{}] : {}\n".format(datetime.now(KST).strftime('%Y-%m-%d %H:%M:%S'), msg)
     sys.stdout.write(pStr)
+    buffer += pStr  # 로그 버퍼에 추가
 
 def send_slack_message(status, msg):
-    title = "Reservation Success" if status == 0 else "Reservation Failed"
-    color = "#2EB67D" if status == 0 else "#E01E5A"
+    if status == 0: # 성공
+        title = "Reservation Success"
+        color = "#2EB67D"
+        message = f"예약에 성공했습니다.\n```{msg}```\n<{base_url}|예약 하러가기>\n**Log 출력**\n```{buffer}```"
+    else:
+        title = "Reservation Failed"
+        color = "#E01E5A"
+        message = f"예약에 실패했습니다.\n```{msg}```\n**Log 출력**\n```{buffer}```"
 
     data = {
         "attachments": [
             {
                 "title": title,
                 "title_link": "https://github.com/jiyeoon/side_proj/actions",
-                "text": msg,
+                "text": message,
                 "color": color
             }
         ]
