@@ -17,7 +17,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # 0. 변수 선언 
 KST = timezone(timedelta(hours=9))
-TARGET_TIME = datetime.now(KST).replace(hour=9, minute=0, second=0, microsecond=4)
+TARGET_TIME = datetime.now(KST).replace(hour=9, minute=0, second=0, microsecond=10)
 
 login_id = os.environ.get("LOGIN_ID")
 login_pw = os.environ.get("LOGIN_PASSWORD")
