@@ -169,7 +169,7 @@ def main():
     else:
         msgInfo("클릭 가능한 날짜가 없음")
         return 1
-    msgInfo("예약 가능한 날짜 클릭 : {}".format(clickable_dates[-1].text))
+    msgInfo("예약 가능한 날짜 클릭 : {}".format(clickable_dates[-1].text.replace('\n', '/')))
         
     # 4.2 시간 선택 리스트 요소들 가져오기
     time_slots = driver.find_elements(By.CSS_SELECTOR, 'ul#time_con li')
