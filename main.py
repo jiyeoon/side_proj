@@ -123,11 +123,11 @@ def main():
     # 3. 예약하기 버튼 클릭
     msgInfo("메인 홈페이지 로딩 대기 & 예약하기 버튼 클릭")
     # 페이지 로딩 완료 대기
-    WebDriverWait(driver, 20).until(
+    WebDriverWait(driver, 60).until(
         lambda d: d.execute_script("return document.readyState") == "complete"
     )
     # 버튼 대기 및 클릭
-    link = WebDriverWait(driver, 15).until(
+    link = WebDriverWait(driver, 60).until(
         EC.element_to_be_clickable((By.LINK_TEXT, "일일입장 예약신청"))
     )
     driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", link)
