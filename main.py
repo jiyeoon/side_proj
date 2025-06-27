@@ -182,7 +182,7 @@ def main():
             if checkbox.is_enabled() and "신청가능" in label.text:
                 driver.execute_script("arguments[0].click();", checkbox)
                 click_count += 1
-                if click_count == 2:
+                if click_count == 1:
                     break
         except Exception as e:
             # 예외 무시하고 다음으로
