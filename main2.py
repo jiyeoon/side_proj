@@ -221,7 +221,8 @@ def main():
             driver.execute_script("arguments[0].scrollIntoView(true);", target)
             time.sleep(0.1)
             driver.execute_script("arguments[0].click();", target)
-            msgInfo(f"✅ 예약 가능한 날짜 클릭: {clickable_dates[-1].text.replace('\n', '/')}")
+            txt = clickable_dates[-1].text.replace('\n', '/')
+            msgInfo(f"✅ 예약 가능한 날짜 클릭: {txt}")
         else:
             msgInfo("❌ 클릭 가능한 날짜가 없음")
             if driver:
