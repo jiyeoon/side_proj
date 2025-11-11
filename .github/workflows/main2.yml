@@ -1,0 +1,46 @@
+# .github/workflows/main.yml
+
+name: Daily Task
+
+on:
+  schedule:
+    - cron: "50 23 * * *"  # UTC 기준. 한국시간 오전 8시 55분
+  workflow_dispatch:
+
+jobs:
+  login-task:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt install -y ./google-chrome-stable_current_amd64.deb
+        wget -O chromedriver.zip https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.55/linux64/chromedriver-linux64.zip
+        unzip chromedriver.zip
+        sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+        sudo chmod +x /usr/local/bin/chromedriver
+
+    - name: Install Python dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run Python script
+      env:
+        LOGIN_ID: ${{ secrets.MY_ID }}
+        LOGIN_PASSWORD: ${{ secrets.MY_PASSWORD }}
+        LOGIN_URL: ${{ secrets.MY_LOGIN_URL }}
+        SLACK_URL: ${{ secrets.MY_SLACK_URL }}
+        BASE_URL: ${{ secrets.MY_BASE_URL }}
+        KAKAO_ACCESS_TOKEN: ${{ secrets.MY_KAKAO_ACCESS_TOKEN }}
+      run: python main2.py
