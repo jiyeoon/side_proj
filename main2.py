@@ -103,6 +103,10 @@ def main():
             options.add_argument("--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
         
         driver = webdriver.Chrome(options=options)
+        driver.execute_cdp_cmd(
+            "Page.addScriptToEvaluateOnNewDocument",
+            {"source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"}
+        )
         msgInfo("Chrome Driver 설정 완료")
     except Exception as e:
         msgInfo(f"❌ Chrome Driver 설정 실패: {e}")
@@ -152,6 +156,7 @@ def main():
             EC.element_to_be_clickable((By.LINK_TEXT, "일일입장 예약신청"))
         )
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", link)
+        time.sleep(1) # JS 바인딩 대기
         driver.execute_script("arguments[0].click();", link)
         msgInfo("✅ 예약 페이지 진입 완료")
         
