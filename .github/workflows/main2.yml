@@ -23,13 +23,20 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget unzip tesseract-ocr curl jq
+        sudo apt-get install -y wget unzip tesseract-ocr curl jq \
+          libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 \
+          libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 \
+          libxrandr2 libgbm1 libasound2 libpango-1.0-0 libcairo2
         wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
         sudo apt install -y ./google-chrome-stable_current_amd64.deb
+        CHROME_VERSION=$(google-chrome --version | awk '{print $3}')
+        echo "Installed Chrome: $CHROME_VERSION"
         CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" | jq -r '.channels.Stable.version')
+        echo "Downloading ChromeDriver: $CHROMEDRIVER_VERSION"
         wget -q -O chromedriver.zip "https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip"
         unzip -q chromedriver.zip
         sudo mv chromedriver-linux64/chromedriver /usr/local/bin/ && sudo chmod +x /usr/local/bin/chromedriver
+        chromedriver --version
         rm -rf chromedriver.zip chromedriver-linux64 google-chrome-stable_current_amd64.deb
 
     - name: Install Python dependencies
@@ -45,3 +52,12 @@ jobs:
         BASE_URL: ${{ secrets.MY_BASE_URL }}
         KAKAO_ACCESS_TOKEN: ${{ secrets.MY_KAKAO_ACCESS_TOKEN }}
       run: python main2.py
+      continue-on-error: true
+    
+    - name: Upload error screenshot
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: error-screenshot
+        path: /tmp/error_screenshot.png
+        if-no-files-found: ignore

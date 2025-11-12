@@ -164,6 +164,32 @@ def main():
         
     except Exception as e:
         msgInfo(f"❌ 예약 페이지 진입 실패: {e}")
+        # GitHub Actions 환경에서 디버깅 정보 수집
+        try:
+            if driver:
+                current_url = driver.current_url
+                page_title = driver.title
+                msgInfo(f"📍 현재 URL: {current_url}")
+                msgInfo(f"📄 페이지 제목: {page_title}")
+                # 스크린샷 저장 (GitHub Actions에서도 확인 가능)
+                screenshot_path = "/tmp/error_screenshot.png"
+                driver.save_screenshot(screenshot_path)
+                msgInfo(f"📸 에러 스크린샷 저장: {screenshot_path}")
+                # 페이지의 모든 링크 확인
+                try:
+                    all_links = driver.find_elements(By.TAG_NAME, "a")
+                    msgInfo(f"🔍 페이지의 링크 개수: {len(all_links)}")
+                    for i, link_elem in enumerate(all_links[:20]):
+                        try:
+                            link_text = link_elem.text
+                            if link_text and ("예약" in link_text or "입장" in link_text):
+                                msgInfo(f"  링크 {i+1}: {link_text}")
+                        except:
+                            pass
+                except:
+                    pass
+        except Exception as debug_e:
+            msgInfo(f"⚠️ 디버깅 정보 수집 실패: {debug_e}")
         if driver:
             driver.quit()
         return 1
