@@ -156,7 +156,7 @@ def main():
             EC.element_to_be_clickable((By.LINK_TEXT, "일일입장 예약신청"))
         )
         driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", link)
-        time.sleep(1) # JS 바인딩 대기
+        time.sleep(3) # JS 바인딩 대기
         driver.execute_script("arguments[0].click();", link)
         msgInfo("✅ 예약 페이지 진입 완료")
         
