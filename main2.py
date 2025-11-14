@@ -91,6 +91,7 @@ def main():
         else:
             msgInfo("🔧 Headless 모드로 실행 (디스플레이 없음)")
             # Headless 모드
+            options.binary_location = "/usr/local/share/chrome/chrome"
             options.add_argument("--headless=new")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
