@@ -25,39 +25,39 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y wget unzip jq
 
-        # 최신 Stable Chrome for Testing 버전 가져오기
-        CFT_VERSION=$(curl -s \
-          "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json" \
-          | jq -r '.channels.Stable.version')
+        # 로컬에서 잘 작동하는 버전으로 고정 (114.0.5735.90)
+        # Chrome for Testing에는 없을 수 있으므로 일반 ChromeDriver 다운로드 URL 사용
+        CHROMEDRIVER_VERSION="114.0.5735.90"
+        echo "Using ChromeDriver version: $CHROMEDRIVER_VERSION (stable working version)"
 
-        echo "Using Chrome for Testing version: $CFT_VERSION"
+        # ChromeDriver 다운로드 (일반 ChromeDriver 저장소 사용)
+        CHROMEDRIVER_URL="https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+        echo "ChromeDriver URL: $CHROMEDRIVER_URL"
+        
+        # 다운로드 시도
+        if ! wget -q -O chromedriver.zip "$CHROMEDRIVER_URL"; then
+          echo "ChromeDriver 114.0.5735.90 not found, trying alternative..."
+          # 대안: 114 버전대의 다른 버전 시도
+          CHROMEDRIVER_VERSION="114.0.5735.16"
+          CHROMEDRIVER_URL="https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip"
+          wget -q -O chromedriver.zip "$CHROMEDRIVER_URL"
+        fi
+        
+        # Chrome은 일반 Chrome 설치 (버전 호환)
+        wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt install -y ./google-chrome-stable_current_amd64.deb
+        rm -f google-chrome-stable_current_amd64.deb
 
-        # 다운로드 URL
-        CFT_CHROME_URL="https://storage.googleapis.com/chrome-for-testing-public/${CFT_VERSION}/linux64/chrome-linux64.zip"
-        CFT_DRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${CFT_VERSION}/linux64/chromedriver-linux64.zip"
-
-        echo "Chrome URL: $CFT_CHROME_URL"
-        echo "Driver URL: $CFT_DRIVER_URL"
-
-        # 다운로드
-        wget -q -O chrome.zip "$CFT_CHROME_URL"
-        wget -q -O driver.zip "$CFT_DRIVER_URL"
-
-        # 압축 해제
-        unzip -q chrome.zip
-        unzip -q driver.zip
-
-        # 설치
-        sudo mv chrome-linux64 /usr/local/share/chrome
-        sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+        # ChromeDriver 압축 해제 및 설치
+        unzip -q chromedriver.zip
+        sudo mv chromedriver /usr/local/bin/ || sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
         sudo chmod +x /usr/local/bin/chromedriver
 
         # 정리
-        rm chrome.zip driver.zip
-        rm -rf chromedriver-linux64
+        rm -rf chromedriver.zip chromedriver-linux64
 
         echo "Installed Chrome:"
-        /usr/local/share/chrome/chrome --version
+        google-chrome --version
         echo "Installed ChromeDriver:"
         chromedriver --version
 
