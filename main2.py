@@ -91,7 +91,7 @@ def main():
         else:
             msgInfo("🔧 Headless 모드로 실행 (디스플레이 없음)")
             # Headless 모드 - single-process 제거 (크래시 원인)
-            options.add_argument("--headless=old")
+            options.add_argument("--headless")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--disable-gpu")
