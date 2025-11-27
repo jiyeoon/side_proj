@@ -200,8 +200,8 @@ def main():
     
     if time_diff > 0:
         # 15초 전까지는 0.1초씩 대기
-        if time_diff > 15:
-            sleep_time = time_diff - 15
+        if time_diff > 10:
+            sleep_time = time_diff - 10
             msgInfo(f"9시 정각까지 {sleep_time:.1f}초 대기...")
             time.sleep(sleep_time)
         
@@ -212,10 +212,9 @@ def main():
             current_time = datetime.now(KST)
             if current_time >= TARGET_TIME:
                 break
-            time.sleep(0.0001)
             loop_count += 1
             # 무한 루프 방지 (20초 = 200000번)
-            if loop_count > 200000:
+            if loop_count > 2000000:
                 msgInfo("⚠️ 대기 시간이 너무 길어 강제 종료합니다.")
                 if driver:
                     driver.quit()
