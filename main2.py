@@ -213,12 +213,13 @@ def main():
             if current_time >= TARGET_TIME:
                 break
             loop_count += 1
-            # 무한 루프 방지 (20초 = 200000번)
-            if loop_count > 2000000:
+            # 무한 루프 방지 (20초 = 2000000번)
+            if loop_count > 20000000:
                 msgInfo("⚠️ 대기 시간이 너무 길어 강제 종료합니다.")
                 if driver:
                     driver.quit()
                 return 1
+            time.sleep(0.0001)
         
         msgInfo("9시 정각 도달!")
     else:
