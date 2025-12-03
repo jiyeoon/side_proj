@@ -52,6 +52,10 @@ jobs:
         sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
         sudo chmod +x /usr/local/bin/chromedriver
 
+        # 크롬 버전 강제
+        sudo ln -sf /usr/local/share/chrome/chrome /usr/local/bin/chrome
+        sudo ln -sf /usr/local/share/chrome/chrome /usr/bin/google-chrome
+
         # 정리
         rm chrome.zip driver.zip
         rm -rf chromedriver-linux64
