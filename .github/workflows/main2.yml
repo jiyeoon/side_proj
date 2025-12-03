@@ -22,48 +22,60 @@ jobs:
 
     - name: Install Chrome for Testing + ChromeDriver
       run: |
+
         sudo apt-get update
-        sudo apt-get install -y wget unzip jq
+        sudo apt-get install -y wget unzip
 
-        # 최신 Stable Chrome for Testing 버전 가져오기
-        CFT_VERSION=$(curl -s \
-          "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json" \
-          | jq -r '.channels.Stable.version')
+        DRIVER_VERSION=142.0.7444.175
 
-        echo "Using Chrome for Testing version: $CFT_VERSION"
+        wget -q https://storage.googleapis.com/chrome-for-testing-public/${DRIVER_VERSION}/linux64/chromedriver-linux64.zip
+        unzip -q chromedriver-linux64.zip
 
-        # 다운로드 URL
-        CFT_CHROME_URL="https://storage.googleapis.com/chrome-for-testing-public/${CFT_VERSION}/linux64/chrome-linux64.zip"
-        CFT_DRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${CFT_VERSION}/linux64/chromedriver-linux64.zip"
-
-        echo "Chrome URL: $CFT_CHROME_URL"
-        echo "Driver URL: $CFT_DRIVER_URL"
-
-        # 다운로드
-        wget -q -O chrome.zip "$CFT_CHROME_URL"
-        wget -q -O driver.zip "$CFT_DRIVER_URL"
-
-        # 압축 해제
-        unzip -q chrome.zip
-        unzip -q driver.zip
-
-        # 설치
-        sudo mv chrome-linux64 /usr/local/share/chrome
         sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
         sudo chmod +x /usr/local/bin/chromedriver
 
-        # 크롬 버전 강제
-        sudo ln -sf /usr/local/share/chrome/chrome /usr/local/bin/chrome
-        sudo ln -sf /usr/local/share/chrome/chrome /usr/bin/google-chrome
-
-        # 정리
-        rm chrome.zip driver.zip
-        rm -rf chromedriver-linux64
-
-        echo "Installed Chrome:"
-        /usr/local/share/chrome/chrome --version
-        echo "Installed ChromeDriver:"
         chromedriver --version
+        google-chrome --version
+
+        # # 크롬 버전 강제
+        # sudo apt-get update
+        # sudo apt-get install -y wget unzip jq
+
+        # # 최신 Stable Chrome for Testing 버전 가져오기
+        # CFT_VERSION=$(curl -s \
+        #   "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json" \
+        #   | jq -r '.channels.Stable.version')
+
+        # echo "Using Chrome for Testing version: $CFT_VERSION"
+
+        # # 다운로드 URL
+        # CFT_CHROME_URL="https://storage.googleapis.com/chrome-for-testing-public/${CFT_VERSION}/linux64/chrome-linux64.zip"
+        # CFT_DRIVER_URL="https://storage.googleapis.com/chrome-for-testing-public/${CFT_VERSION}/linux64/chromedriver-linux64.zip"
+
+        # echo "Chrome URL: $CFT_CHROME_URL"
+        # echo "Driver URL: $CFT_DRIVER_URL"
+
+        # # 다운로드
+        # wget -q -O chrome.zip "$CFT_CHROME_URL"
+        # wget -q -O driver.zip "$CFT_DRIVER_URL"
+
+        # # 압축 해제
+        # unzip -q chrome.zip
+        # unzip -q driver.zip
+
+        # # 설치
+        # sudo mv chrome-linux64 /usr/local/share/chrome
+        # sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
+        # sudo chmod +x /usr/local/bin/chromedriver
+
+        # # 정리
+        # rm chrome.zip driver.zip
+        # rm -rf chromedriver-linux64
+
+        # echo "Installed Chrome:"
+        # /usr/local/share/chrome/chrome --version
+        # echo "Installed ChromeDriver:"
+        # chromedriver --version
 
     - name: Install Python dependencies
       run: |
