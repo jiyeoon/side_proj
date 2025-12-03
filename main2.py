@@ -103,10 +103,10 @@ def main():
             options.add_argument("--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36")
         
         driver = webdriver.Chrome(options=options)
-        driver.execute_cdp_cmd(
-            "Page.addScriptToEvaluateOnNewDocument",
-            {"source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"}
-        )
+        # driver.execute_cdp_cmd(
+        #     "Page.addScriptToEvaluateOnNewDocument",
+        #     {"source": "Object.defineProperty(navigator, 'webdriver', {get: () => undefined})"}
+        # )
         msgInfo("Chrome Driver 설정 완료")
     except Exception as e:
         msgInfo(f"❌ Chrome Driver 설정 실패: {e}")
@@ -114,7 +114,7 @@ def main():
 
     # 2. 로그인
     try:
-        msgInfo("🔐 로그인 페이지로 이동")
+        msgInfo("🔐 로그인 페이지로 이동, url: " + login_url)
         driver.get(login_url)
         
         msgInfo("📝 로그인 정보 입력 중")
@@ -149,6 +149,7 @@ def main():
         WebDriverWait(driver, 60).until(
             lambda d: d.execute_script("return document.readyState") == "complete"
         )
+        msgInfo("현재 URL: " + driver.current_url)
         
         msgInfo("🎾 예약하기 버튼 클릭")
         # 버튼 대기 및 클릭
